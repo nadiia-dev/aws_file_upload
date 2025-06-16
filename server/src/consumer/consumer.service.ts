@@ -1,17 +1,21 @@
+import { SQSClient } from '@aws-sdk/client-sqs';
 import { Injectable } from '@nestjs/common';
-import { SqsMessageHandler } from '@ssut/nestjs-sqs';
-import * as AWS from 'aws-sdk';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConsumerService {
-  constructor() {}
-  @SqsMessageHandler(process.env.SQS_QUEUE!, false)
-  handleMessage(message: AWS.SQS.Message) {
-    const obj: any = JSON.parse(message.Body!) as {
-      message: string;
-      date: string;
-    };
-    const { data } = JSON.parse(obj.Message);
-    console.log(data);
+  private sqsClient: SQSClient;
+  private queueUrl: string;
+
+  constructor(private readonly configService: ConfigService) {
+    this.queueUrl = this.configService.get<string>('SQS_QUEUE_URL')!;
+
+    this.sqsClient = new SQSClient({
+      region: this.configService.get<string>('AWS_REGION')!,
+      credentials: {
+        accessKeyId: this.configService.get<string>('ACCESS_KEY_ID')!,
+        secretAccessKey: this.configService.get<string>('SECRET_ACCESS_KEY')!,
+      },
+    });
   }
 }
