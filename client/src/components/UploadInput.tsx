@@ -1,12 +1,15 @@
 import { CloudUpload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 const UploadInput = ({
   required,
   name,
+  setPresignedUrl,
 }: {
   required: boolean;
   name: string;
+  setPresignedUrl: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
     useDropzone({
@@ -15,6 +18,29 @@ const UploadInput = ({
         "application/pdf": [".pdf"],
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
           [".docx"],
+      },
+      onDrop: async (incomingFiles) => {
+        const name = incomingFiles[0].name;
+        const type = incomingFiles[0].type;
+
+        try {
+          const res = await fetch(
+            `http://localhost:3000/documents/generate-presigned-url`,
+            {
+              method: "POST",
+              body: JSON.stringify({ fileName: name, fileType: type }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await res.json();
+          setPresignedUrl(data?.presignedUrl);
+        } catch (e) {
+          if (e instanceof Error) {
+            toast.error(e.message);
+          }
+        }
       },
     });
 
