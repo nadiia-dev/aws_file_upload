@@ -27,6 +27,7 @@
     "@prisma/client": "^6.9.0",
     "@ssut/nestjs-sqs": "^3.0.1",
     "aws-sdk": "^2.1692.0",
+    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
