@@ -2,20 +2,41 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Upload from "./pages/Upload";
 import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+import Home from "./pages/Home";
+import Error from "./pages/Error";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       id: "root",
+      errorElement: <Error />,
       children: [
         {
+          index: true,
+          element: (
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          ),
+        },
+        {
           path: "/register",
-          element: <Register />,
+          element: (
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          ),
         },
         {
           path: "/upload",
-          element: <Upload />,
+          element: (
+            <ProtectedRoute>
+              <Upload />
+            </ProtectedRoute>
+          ),
         },
       ],
     },
