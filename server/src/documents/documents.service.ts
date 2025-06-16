@@ -28,20 +28,21 @@ export class DocumentsService {
   }: {
     fileName: string;
     fileType: string;
-  }): Promise<{ presignedUrl: string }> {
+  }): Promise<{ presignedUrl: string; key: string }> {
+    const key = `uploads/${fileName}`;
     const command = new PutObjectCommand({
       Bucket: this.configService.get<string>('S3_BUCKET')!,
-      Key: `uploads/${fileName}`,
+      Key: key,
       ContentType: fileType,
     });
     const url = await getSignedUrl(this.s3, command, { expiresIn: 300 });
-    return { presignedUrl: url };
+    return { presignedUrl: url, key };
   }
 
   async upload(documentData: CreateDocumentDto): Promise<Document> {
-    return (await this.prisma.document.create({
+    return await this.prisma.document.create({
       data: documentData,
-    })) as Document;
+    });
   }
 
   async list(): Promise<Document[]> {

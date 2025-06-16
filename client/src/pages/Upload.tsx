@@ -1,14 +1,39 @@
 import { useState } from "react";
 import UploadInput from "../components/UploadInput";
+import { toast } from "react-toastify";
 
 const Upload = () => {
   const [presignedUrl, setPresignedUrl] = useState("");
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [fileUrl, setFileUrl] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const file = formData.get("my-file");
-    console.log(file);
+    try {
+      const res = await fetch(presignedUrl, {
+        method: "PUT",
+        body: file,
+      });
+      if (res.ok) {
+        await fetch("http://localhost:3000/documents/upload", {
+          method: "POST",
+          body: JSON.stringify({
+            userEmail: localStorage.getItem("userEmail"),
+            filename: file?.name,
+            s3Url: fileUrl,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      }
+    }
   };
 
   return (
@@ -21,6 +46,7 @@ const Upload = () => {
           name="my-file"
           required
           setPresignedUrl={setPresignedUrl}
+          setFileUrl={setFileUrl}
         />
         <button
           type="submit"

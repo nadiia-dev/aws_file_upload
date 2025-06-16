@@ -15,7 +15,7 @@ datasource db {
 
 model Document{
   id          Int             @id @default(autoincrement())
-  userEmail   String          @unique
+  userEmail   String         
   filename    String
   uploadedAt  DateTime        @default(now())
   s3Url       String

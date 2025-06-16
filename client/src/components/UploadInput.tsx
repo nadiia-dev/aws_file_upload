@@ -6,10 +6,12 @@ const UploadInput = ({
   required,
   name,
   setPresignedUrl,
+  setFileUrl,
 }: {
   required: boolean;
   name: string;
   setPresignedUrl: React.Dispatch<React.SetStateAction<string>>;
+  setFileUrl: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
     useDropzone({
@@ -36,6 +38,10 @@ const UploadInput = ({
           );
           const data = await res.json();
           setPresignedUrl(data?.presignedUrl);
+          const url = `https://${import.meta.env.VITE_BUCKET}.s3.${
+            import.meta.env.VITE_REGION
+          }.amazonaws.com/${data?.key}`;
+          setFileUrl(url);
         } catch (e) {
           if (e instanceof Error) {
             toast.error(e.message);
