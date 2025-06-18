@@ -1,7 +1,13 @@
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { config } from '../config';
 import { Readable } from 'stream';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class S3Service {
@@ -15,6 +21,20 @@ export class S3Service {
         secretAccessKey: config.SECRET_ACCESS_KEY!,
       },
     });
+  }
+
+  async uploadFile(
+    bucket: string,
+    key: string,
+    fileType: string,
+  ): Promise<string> {
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ContentType: fileType,
+    });
+    const url = await getSignedUrl(this.client, command, { expiresIn: 300 });
+    return url;
   }
 
   async getFile(bucket: string, key: string): Promise<Buffer> {
@@ -31,5 +51,12 @@ export class S3Service {
     }
 
     return Buffer.concat(chunks);
+  }
+
+  async deleteFile(bucket: string, key: string) {
+    const command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
+    const response = await this.client.send(command);
+
+    return response;
   }
 }

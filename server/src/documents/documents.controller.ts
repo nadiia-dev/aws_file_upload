@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/document.dto';
 
@@ -18,5 +26,10 @@ export class DocumentsController {
   @Get()
   listDocuments(@Query() query: { email: string }) {
     return this.documentsService.list(query.email);
+  }
+
+  @Delete('/:id')
+  deleteDocument(@Param('id') id: string) {
+    return this.documentsService.delete(Number(id));
   }
 }

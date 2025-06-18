@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateDocumentDto } from './dto/document.dto';
 import { Document } from './document.type';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { S3Service } from 'src/s3/s3.service';
 import { config } from 'src/config';
 
@@ -22,12 +20,7 @@ export class DocumentsService {
     fileType: string;
   }): Promise<{ presignedUrl: string; key: string }> {
     const key = `uploads/${fileName}`;
-    const command = new PutObjectCommand({
-      Bucket: config.S3_BUCKET!,
-      Key: key,
-      ContentType: fileType,
-    });
-    const url = await getSignedUrl(this.s3.client, command, { expiresIn: 300 });
+    const url = await this.s3.uploadFile(config.S3_BUCKET!, key, fileType);
     return { presignedUrl: url, key };
   }
 
@@ -41,5 +34,32 @@ export class DocumentsService {
     return (await this.prisma.document.findMany({
       where: { userEmail: email },
     })) as Document[];
+  }
+
+  async delete(id: number) {
+    try {
+      const document = await this.prisma.document.findUnique({ where: { id } });
+
+      if (!document) {
+        throw new Error('Document not found');
+      }
+
+      const key = `uploads/${document.filename}`;
+      const res = await this.s3.deleteFile(config.S3_BUCKET!, key);
+
+      const isSuccess =
+        res.DeleteMarker === true ||
+        res.$metadata?.httpStatusCode === 204 ||
+        res.$metadata?.httpStatusCode === 200;
+
+      if (!isSuccess) {
+        throw new Error('Failed to delete file from S3');
+      }
+
+      return await this.prisma.document.delete({ where: { id } });
+    } catch (e) {
+      console.error('Error while deleting document:', e);
+      throw new Error('Document deletion failed');
+    }
   }
 }

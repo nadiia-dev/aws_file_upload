@@ -12,7 +12,7 @@ const Home = () => {
     const getFiles = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/documents?email=${userEmail}`,
+          `${import.meta.env.VITE_API_URL}/documents?email=${userEmail}`,
           {
             method: "GET",
           }
@@ -30,6 +30,7 @@ const Home = () => {
 
     getFiles();
   }, [userEmail]);
+
   return (
     <div className="flex flex-col md:flex-row p-4 gap-4">
       <div className="w-full md:w-1/3 bg-blue-50 rounded-xl shadow p-4">

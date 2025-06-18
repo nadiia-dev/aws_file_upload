@@ -10,14 +10,14 @@ const Upload = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const file = formData.get("my-file");
+    const file = formData.get("my-file") as File;
     try {
       const res = await fetch(presignedUrl, {
         method: "PUT",
         body: file,
       });
       if (res.ok) {
-        await fetch("http://localhost:3000/documents/upload", {
+        await fetch(`${import.meta.env.VITE_API_URL}/documents/upload`, {
           method: "POST",
           body: JSON.stringify({
             userEmail: localStorage.getItem("userEmail"),

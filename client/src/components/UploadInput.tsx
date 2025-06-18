@@ -27,7 +27,7 @@ const UploadInput = ({
 
         try {
           const res = await fetch(
-            `http://localhost:3000/documents/generate-presigned-url`,
+            `${import.meta.env.VITE_API_URL}/documents/generate-presigned-url`,
             {
               method: "POST",
               body: JSON.stringify({ fileName: name, fileType: type }),
