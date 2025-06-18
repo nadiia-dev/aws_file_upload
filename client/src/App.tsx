@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Home from "./pages/Home";
 import Error from "./pages/Error";
+import { UserProvider } from "./context/userContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -33,10 +34,10 @@ function App() {
     },
   ]);
   return (
-    <>
+    <UserProvider>
       <RouterProvider router={router} />
       <ToastContainer />
-    </>
+    </UserProvider>
   );
 }
 

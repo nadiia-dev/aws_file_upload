@@ -1,28 +1,9 @@
 import { Trash2 } from "lucide-react";
 import type { FileItem } from "../types/file";
 import { formatDate } from "../utils/formatDate";
-import { toast } from "react-toastify";
+import { deleteDocument } from "../api";
 
 const FileList = ({ files }: { files: FileItem[] }) => {
-  const handleDelete = async (id: number) => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/documents/${id}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (res.ok) {
-        toast.success("Your document was deleted!");
-      }
-    } catch (e) {
-      if (e instanceof Error) {
-        toast.error(e.message);
-      }
-    }
-  };
-
   return (
     <div className="space-y-4">
       <ul className="space-y-4">
@@ -42,7 +23,7 @@ const FileList = ({ files }: { files: FileItem[] }) => {
               </div>
               <button
                 type="button"
-                onClick={() => handleDelete(file.id)}
+                onClick={() => deleteDocument(file.id)}
                 className="text-red-500 cursor-pointer"
               >
                 <Trash2 />

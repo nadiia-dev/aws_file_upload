@@ -1,6 +1,6 @@
 import { CloudUpload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
+import { generatePresignedUrl } from "../api";
 
 const UploadInput = ({
   required,
@@ -25,28 +25,12 @@ const UploadInput = ({
         const name = incomingFiles[0].name;
         const type = incomingFiles[0].type;
 
-        try {
-          const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/documents/generate-presigned-url`,
-            {
-              method: "POST",
-              body: JSON.stringify({ fileName: name, fileType: type }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const data = await res.json();
-          setPresignedUrl(data?.presignedUrl);
-          const url = `https://${import.meta.env.VITE_BUCKET}.s3.${
-            import.meta.env.VITE_REGION
-          }.amazonaws.com/${data?.key}`;
-          setFileUrl(url);
-        } catch (e) {
-          if (e instanceof Error) {
-            toast.error(e.message);
-          }
-        }
+        const data = await generatePresignedUrl(name, type);
+        setPresignedUrl(data?.presignedUrl);
+        const url = `https://${import.meta.env.VITE_BUCKET}.s3.${
+          import.meta.env.VITE_REGION
+        }.amazonaws.com/${data?.key}`;
+        setFileUrl(url);
       },
     });
 

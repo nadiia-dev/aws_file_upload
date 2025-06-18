@@ -2,33 +2,27 @@ import { useEffect, useState } from "react";
 import FileList from "../components/FileList";
 import SearchInput from "../components/SearchInput";
 import Upload from "./Upload";
-import { toast } from "react-toastify";
 import type { FileItem } from "../types/file";
+import { getFiles } from "../api";
+import { useUser } from "../context/userContext";
 
 const Home = () => {
   const [files, setFiles] = useState<FileItem[]>([]);
-  const userEmail = localStorage.getItem("userEmail");
+  const userEmail = useUser();
+
   useEffect(() => {
-    const getFiles = async () => {
+    if (!userEmail) return;
+
+    const fetchData = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/documents?email=${userEmail}`,
-          {
-            method: "GET",
-          }
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setFiles(data);
-        }
-      } catch (e) {
-        if (e instanceof Error) {
-          toast.error(e.message);
-        }
+        const data = await getFiles(userEmail);
+        setFiles(data);
+      } catch (error) {
+        console.error("Error fetching files:", error);
       }
     };
 
-    getFiles();
+    fetchData();
   }, [userEmail]);
 
   return (

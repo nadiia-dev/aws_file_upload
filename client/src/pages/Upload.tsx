@@ -1,40 +1,19 @@
 import { useState } from "react";
 import UploadInput from "../components/UploadInput";
-import { toast } from "react-toastify";
+import { useUser } from "../context/userContext";
+import { uploadFile } from "../api";
 
 const Upload = () => {
   const [presignedUrl, setPresignedUrl] = useState("");
   const [fileUrl, setFileUrl] = useState("");
+  const userEmail = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const file = formData.get("my-file") as File;
-    try {
-      const res = await fetch(presignedUrl, {
-        method: "PUT",
-        body: file,
-      });
-      if (res.ok) {
-        await fetch(`${import.meta.env.VITE_API_URL}/documents/upload`, {
-          method: "POST",
-          body: JSON.stringify({
-            userEmail: localStorage.getItem("userEmail"),
-            filename: file?.name,
-            s3Url: fileUrl,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        toast.success("File was uploaded successfully!");
-      }
-    } catch (e) {
-      if (e instanceof Error) {
-        toast.error(e.message);
-      }
-    }
+    await uploadFile(presignedUrl, userEmail!, file, fileUrl);
   };
 
   return (
