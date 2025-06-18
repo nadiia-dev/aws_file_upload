@@ -28,6 +28,7 @@ const Upload = () => {
             "Content-Type": "application/json",
           },
         });
+        toast.success("File was uploaded successfully!");
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -37,9 +38,9 @@ const Upload = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
+    <div className="md:min-h-screen flex items-center justify-center">
       <form
-        className="max-w-md w-full flex flex-col space-y-6 justify-center"
+        className="w-full flex flex-col space-y-6 justify-center"
         onSubmit={handleSubmit}
       >
         <UploadInput

@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import Upload from "./pages/Upload";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -28,14 +27,6 @@ function App() {
             <PublicRoute>
               <Register />
             </PublicRoute>
-          ),
-        },
-        {
-          path: "/upload",
-          element: (
-            <ProtectedRoute>
-              <Upload />
-            </ProtectedRoute>
           ),
         },
       ],

@@ -37,7 +37,9 @@ export class DocumentsService {
     });
   }
 
-  async list(): Promise<Document[]> {
-    return (await this.prisma.document.findMany()) as Document[];
+  async list(email: string): Promise<Document[]> {
+    return (await this.prisma.document.findMany({
+      where: { userEmail: email },
+    })) as Document[];
   }
 }

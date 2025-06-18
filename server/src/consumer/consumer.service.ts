@@ -44,12 +44,16 @@ export class ConsumerService {
     }
   }
 
-  // @SqsConsumerEventHandler(config.SQS_QUEUE!, 'processing_error')
-  // public async onProcessingError(error: Error, message: Message) {
-  //   try {
-  //     const payload;
-  //   } catch (error) {
-  //     console.log(`error handling error`, error);
-  //   }
-  // }
+  @SqsConsumerEventHandler(config.SQS_QUEUE!, 'processing_error')
+  public onProcessingError(error: Error, message: Message) {
+    try {
+      const data: DocumentQueuePayloadType = JSON.parse(
+        message.Body!,
+      ) as DocumentQueuePayloadType;
+      console.log('Message payload:', data);
+      throw new Error(`SQS message failed: ${error.message}`);
+    } catch (err) {
+      console.error('Error while handling the error:', err);
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/document.dto';
 
@@ -16,7 +16,7 @@ export class DocumentsController {
   }
 
   @Get()
-  listDocuments() {
-    return this.documentsService.list();
+  listDocuments(@Query() query: { email: string }) {
+    return this.documentsService.list(query.email);
   }
 }
