@@ -27,6 +27,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.3",
     "@nestjs/platform-express": "^11.0.1",
+    "@opensearch-project/opensearch": "^3.5.1",
     "@prisma/client": "^6.9.0",
     "@ssut/nestjs-sqs": "^3.0.1",
     "class-validator": "^0.14.2",

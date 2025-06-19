@@ -9,6 +9,8 @@ import { S3Service } from './s3/s3.service';
 import { ParserService } from './parser/parser.service';
 import { S3Module } from './s3/s3.module';
 import { ParserModule } from './parser/parser.module';
+import { SearchService } from './search/search.service';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -20,8 +22,9 @@ import { ParserModule } from './parser/parser.module';
     DocumentsModule,
     S3Module,
     ParserModule,
+    SearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConsumerService, S3Service, ParserService],
+  providers: [AppService, ConsumerService, S3Service, ParserService, SearchService],
 })
 export class AppModule {}

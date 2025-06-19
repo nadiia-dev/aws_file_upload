@@ -9,4 +9,7 @@ export const config = {
   ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
   SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
   S3_BUCKET: process.env.S3_BUCKET,
+  OPENSEARCH_URL: process.env.OPENSEARCH_URL,
+  ADMIN_USER: process.env.ADMIN_USER,
+  ADMIN_PASS: process.env.ADMIN_PASS,
 };

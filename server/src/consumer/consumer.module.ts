@@ -6,6 +6,7 @@ import { config } from '../config';
 import { SQSClient } from '@aws-sdk/client-sqs';
 import { S3Module } from 'src/s3/s3.module';
 import { ParserModule } from 'src/parser/parser.module';
+import { SearchModule } from 'src/search/search.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ParserModule } from 'src/parser/parser.module';
     ConfigModule,
     S3Module,
     ParserModule,
+    SearchModule,
   ],
   providers: [ConsumerService],
   exports: [ConsumerService],

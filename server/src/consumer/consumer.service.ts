@@ -5,12 +5,14 @@ import { DocumentQueuePayloadType } from './document-queue-payload.type';
 import { S3Service } from 'src/s3/s3.service';
 import { config } from 'src/config';
 import { ParserService } from 'src/parser/parser.service';
+import { SearchService } from 'src/search/search.service';
 
 @Injectable()
 export class ConsumerService {
   constructor(
     private readonly s3: S3Service,
     private readonly parser: ParserService,
+    private readonly searchService: SearchService,
   ) {}
 
   @SqsMessageHandler(config.SQS_QUEUE!, false)
@@ -38,7 +40,11 @@ export class ConsumerService {
         throw new Error('Unsupported file type');
       }
 
-      console.log('Parsed text:', parsedText);
+      await this.searchService.indexDocument('documents', {
+        content: parsedText,
+        filename: objectKey,
+        docType: fileExt,
+      });
     } catch (e) {
       console.log(`error handling error`, e);
     }
