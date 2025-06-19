@@ -8,6 +8,8 @@ import { useUser } from "../context/userContext";
 import SearchResults from "../components/SearchResults";
 import useSearchDocuments from "../hooks/useSearchDocuments";
 import type { SearchResultItem } from "../types/searchResult";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Home = () => {
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -49,6 +51,7 @@ const Home = () => {
       <div className="flex-1 flex flex-col gap-4">
         <SearchInput query={query} setQuery={setQuery} />
         <FileList files={files} />
+        {loading && <Skeleton count={3} height={60} />}
         {rawHits && <SearchResults files={parsedResults} />}
       </div>
     </div>
