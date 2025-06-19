@@ -5,10 +5,25 @@ import Upload from "./Upload";
 import type { FileItem } from "../types/file";
 import { getFiles } from "../api";
 import { useUser } from "../context/userContext";
+import SearchResults from "../components/SearchResults";
+import useSearchDocuments from "../hooks/useSearchDocuments";
+import type { SearchResultItem } from "../types/searchResult";
 
 const Home = () => {
   const [files, setFiles] = useState<FileItem[]>([]);
+  const [query, setQuery] = useState("");
   const userEmail = useUser();
+  const { documents, loading } = useSearchDocuments(query);
+  const rawHits = documents?.body.hits.hits ?? [];
+
+  const parsedResults: SearchResultItem[] = rawHits.map((hit) => ({
+    id: hit._id,
+    filename: hit._source.filename,
+    docType: hit._source.docType,
+    highlight: hit.highlight?.content?.[0]
+      ? { content: hit.highlight.content[0] }
+      : undefined,
+  }));
 
   useEffect(() => {
     if (!userEmail) return;
@@ -32,8 +47,9 @@ const Home = () => {
       </div>
 
       <div className="flex-1 flex flex-col gap-4">
-        <SearchInput />
+        <SearchInput query={query} setQuery={setQuery} />
         <FileList files={files} />
+        {rawHits && <SearchResults files={parsedResults} />}
       </div>
     </div>
   );

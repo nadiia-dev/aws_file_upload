@@ -77,4 +77,9 @@ export class DocumentsService {
       throw new Error('Document deletion failed');
     }
   }
+
+  async search(query: string) {
+    const res = await this.searchService.search('documents', query);
+    return res;
+  }
 }

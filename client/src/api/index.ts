@@ -89,3 +89,22 @@ export const deleteDocument = async (id: number) => {
     }
   }
 };
+
+export const searchDocuments = async (query: string) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/documents/search?searchQuery=${query}`,
+      {
+        method: "GET",
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      toast.error(e.message);
+    }
+  }
+};

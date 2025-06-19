@@ -52,8 +52,15 @@ export class SearchService {
       body: {
         query: {
           match: {
-            content: query,
+            content: { query },
           },
+        },
+        highlight: {
+          fields: {
+            content: {},
+          },
+          pre_tags: ['<mark>'],
+          post_tags: ['</mark>'],
         },
       },
     });

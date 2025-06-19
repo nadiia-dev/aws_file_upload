@@ -32,4 +32,9 @@ export class DocumentsController {
   deleteDocument(@Param('id') id: string) {
     return this.documentsService.delete(Number(id));
   }
+
+  @Get('/search')
+  searchDocuments(@Query() query: { searchQuery: string }) {
+    return this.documentsService.search(query.searchQuery);
+  }
 }
