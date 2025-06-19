@@ -24,6 +24,28 @@ export class SearchService {
     });
   }
 
+  async getDocumentId(index: string, objectKey: string) {
+    const result = await this.client.search({
+      index,
+      body: {
+        query: {
+          term: {
+            'objectKey.keyword': objectKey,
+          },
+        },
+      },
+    });
+
+    return result.body.hits.hits[0]._id;
+  }
+
+  async deleteDocument(index: string, id: string) {
+    return await this.client.delete({
+      index,
+      id,
+    });
+  }
+
   async search(index: string, query: string) {
     return this.client.search({
       index,

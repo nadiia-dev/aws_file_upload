@@ -40,11 +40,12 @@ export class ConsumerService {
         throw new Error('Unsupported file type');
       }
 
-      await this.searchService.indexDocument('documents', {
+      const indexres = await this.searchService.indexDocument('documents', {
         content: parsedText,
-        filename: objectKey,
+        objectKey,
         docType: fileExt,
       });
+      console.log(indexres);
     } catch (e) {
       console.log(`error handling error`, e);
     }

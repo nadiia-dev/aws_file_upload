@@ -7,6 +7,10 @@ export class CreateDocumentDto {
   @IsString()
   filename: string;
 
+  @IsString()
+  objectKey: string;
+
+  @IsString()
   @IsUrl()
   s3Url: string;
 }

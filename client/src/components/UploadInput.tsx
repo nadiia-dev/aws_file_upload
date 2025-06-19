@@ -5,13 +5,17 @@ import { generatePresignedUrl } from "../api";
 const UploadInput = ({
   required,
   name,
-  setPresignedUrl,
-  setFileUrl,
+  setFileData,
 }: {
   required: boolean;
   name: string;
-  setPresignedUrl: React.Dispatch<React.SetStateAction<string>>;
-  setFileUrl: React.Dispatch<React.SetStateAction<string>>;
+  setFileData: React.Dispatch<
+    React.SetStateAction<{
+      presignedUrl: string;
+      fileUrl: string;
+      key: string;
+    }>
+  >;
 }) => {
   const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
     useDropzone({
@@ -26,11 +30,14 @@ const UploadInput = ({
         const type = incomingFiles[0].type;
 
         const data = await generatePresignedUrl(name, type);
-        setPresignedUrl(data?.presignedUrl);
         const url = `https://${import.meta.env.VITE_BUCKET}.s3.${
           import.meta.env.VITE_REGION
         }.amazonaws.com/${data?.key}`;
-        setFileUrl(url);
+        setFileData({
+          presignedUrl: data?.presignedUrl,
+          fileUrl: url,
+          key: data?.key,
+        });
       },
     });
 

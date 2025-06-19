@@ -1,5 +1,5 @@
 export type IndexDocument = {
   content: string;
-  filename: string;
+  objectKey: string;
   docType: string;
 };

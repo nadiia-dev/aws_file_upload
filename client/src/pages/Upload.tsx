@@ -4,8 +4,15 @@ import { useUser } from "../context/userContext";
 import { uploadFile } from "../api";
 
 const Upload = () => {
-  const [presignedUrl, setPresignedUrl] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileData, setFileData] = useState<{
+    presignedUrl: string;
+    fileUrl: string;
+    key: string;
+  }>({
+    presignedUrl: "",
+    fileUrl: "",
+    key: "",
+  });
   const userEmail = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -13,7 +20,13 @@ const Upload = () => {
 
     const formData = new FormData(e.currentTarget);
     const file = formData.get("my-file") as File;
-    await uploadFile(presignedUrl, userEmail!, file, fileUrl);
+    await uploadFile(
+      fileData.presignedUrl,
+      userEmail!,
+      file,
+      fileData.fileUrl,
+      fileData.key
+    );
   };
 
   return (
@@ -22,12 +35,7 @@ const Upload = () => {
         className="w-full flex flex-col space-y-6 justify-center"
         onSubmit={handleSubmit}
       >
-        <UploadInput
-          name="my-file"
-          required
-          setPresignedUrl={setPresignedUrl}
-          setFileUrl={setFileUrl}
-        />
+        <UploadInput name="my-file" required setFileData={setFileData} />
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm transition self-center"

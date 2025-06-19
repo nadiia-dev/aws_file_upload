@@ -4,7 +4,8 @@ export const uploadFile = async (
   presignedUrl: string,
   userEmail: string,
   file: File,
-  fileUrl: string
+  fileUrl: string,
+  key: string
 ) => {
   try {
     const res = await fetch(presignedUrl, {
@@ -18,6 +19,7 @@ export const uploadFile = async (
           userEmail,
           filename: file?.name,
           s3Url: fileUrl,
+          objectKey: key,
         }),
         headers: {
           "Content-Type": "application/json",

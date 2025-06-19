@@ -17,6 +17,7 @@ model Document{
   id          Int             @id @default(autoincrement())
   userEmail   String         
   filename    String
+  objectKey   String          @unique
   uploadedAt  DateTime        @default(now())
   s3Url       String
 }
