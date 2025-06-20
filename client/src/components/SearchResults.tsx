@@ -12,7 +12,7 @@ const SearchResults = ({ files }: { files: SearchResultItem[] }) => {
             >
               <div>
                 <p className="text-lg font-medium text-gray-900">
-                  {file.filename}
+                  {file.objectKey.replace(/^uploads\/\d+_/, "")}
                 </p>
                 {file.highlight && (
                   <div

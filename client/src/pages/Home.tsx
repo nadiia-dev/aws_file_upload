@@ -18,12 +18,14 @@ const Home = () => {
 
   const parsedResults: SearchResultItem[] = rawHits.map((hit) => ({
     id: hit._id,
-    filename: hit._source.filename,
+    objectKey: hit._source.objectKey,
     docType: hit._source.docType,
     highlight: hit.highlight?.content?.[0]
       ? { content: hit.highlight.content[0] }
       : undefined,
   }));
+
+  console.log(parsedResults);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -38,7 +40,7 @@ const Home = () => {
 
       <div className="flex-1 flex flex-col gap-4">
         <SearchInput />
-        {rawHits ? (
+        {rawHits.length > 0 ? (
           <SearchResults files={parsedResults} />
         ) : (
           <FileList files={files} />

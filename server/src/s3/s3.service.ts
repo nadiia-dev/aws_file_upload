@@ -1,6 +1,7 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -27,14 +28,24 @@ export class S3Service {
     bucket: string,
     key: string,
     fileType: string,
+    userEmail: string,
   ): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: key,
       ContentType: fileType,
+      Metadata: {
+        userEmail,
+      },
     });
     const url = await getSignedUrl(this.client, command, { expiresIn: 300 });
     return url;
+  }
+
+  async getMetadata(bucket: string, key: string) {
+    const command = new HeadObjectCommand({ Bucket: bucket, Key: key });
+    const headData = await this.client.send(command);
+    return headData.Metadata;
   }
 
   async getFile(bucket: string, key: string): Promise<Buffer> {

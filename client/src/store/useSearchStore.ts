@@ -8,7 +8,7 @@ interface SearchState {
   setDocuments: (doc: OpenSearchResponse | null) => void;
   loading: boolean;
   setQuery: (q: string) => void;
-  search: (q?: string) => Promise<void>;
+  search: (userEmail: string, q?: string) => Promise<void>;
 }
 
 export const useSearchStore = create<SearchState>((set) => ({
@@ -22,7 +22,7 @@ export const useSearchStore = create<SearchState>((set) => ({
 
   setQuery: (q) => set({ query: q }),
 
-  search: async (q) => {
+  search: async (userEmail, q) => {
     if (!q) {
       set({ documents: null });
       return;
@@ -30,7 +30,7 @@ export const useSearchStore = create<SearchState>((set) => ({
 
     set({ loading: true });
     try {
-      const res = await searchDocuments(q);
+      const res = await searchDocuments(userEmail, q);
       set({ documents: res });
     } catch (e) {
       console.error(e);

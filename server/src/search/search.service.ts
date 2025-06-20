@@ -46,13 +46,28 @@ export class SearchService {
     });
   }
 
-  async search(index: string, query: string) {
+  async search(index: string, query: string, userEmail: string) {
     return this.client.search({
       index,
       body: {
         query: {
-          match: {
-            content: { query },
+          bool: {
+            must: [
+              {
+                match: {
+                  content: {
+                    query,
+                  },
+                },
+              },
+            ],
+            filter: [
+              {
+                match_phrase: {
+                  userEmail: userEmail,
+                },
+              },
+            ],
           },
         },
         highlight: {

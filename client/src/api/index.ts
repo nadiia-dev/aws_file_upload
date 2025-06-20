@@ -41,13 +41,17 @@ export const uploadFile = async (
   }
 };
 
-export const generatePresignedUrl = async (name: string, type: string) => {
+export const generatePresignedUrl = async (
+  name: string,
+  type: string,
+  userEmail: string
+) => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/documents/generate-presigned-url`,
       {
         method: "POST",
-        body: JSON.stringify({ fileName: name, fileType: type }),
+        body: JSON.stringify({ fileName: name, fileType: type, userEmail }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -97,10 +101,12 @@ export const deleteDocument = async (id: number) => {
   }
 };
 
-export const searchDocuments = async (query: string) => {
+export const searchDocuments = async (userEmail: string, query: string) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/documents/search?searchQuery=${query}`,
+      `${
+        import.meta.env.VITE_API_URL
+      }/documents/search?searchQuery=${query}&userEmail=${userEmail}`,
       {
         method: "GET",
       }

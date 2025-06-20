@@ -21,12 +21,25 @@ export class ConsumerService {
       message.Body!,
     ) as DocumentQueuePayloadType;
 
+    if (
+      !data.Records ||
+      !Array.isArray(data.Records) ||
+      data.Records.length === 0
+    ) {
+      console.log('SQS message skipped (not a valid S3 event):', data);
+      return;
+    }
+
     const record = data.Records[0];
 
     const bucketName = record.s3.bucket.name;
     const objectKey = decodeURIComponent(
       record.s3.object.key.replace(/\+/g, ' '),
     );
+
+    const metadata = await this.s3.getMetadata(bucketName, objectKey);
+    const userEmail = metadata?.useremail as string;
+
     const fileExt = objectKey.split('.').pop();
     let parsedText: string;
 
@@ -39,13 +52,13 @@ export class ConsumerService {
       } else {
         throw new Error('Unsupported file type');
       }
-
-      const indexres = await this.searchService.indexDocument('documents', {
+      console.log(userEmail);
+      await this.searchService.indexDocument('documents', {
         content: parsedText,
+        userEmail,
         objectKey,
         docType: fileExt,
       });
-      console.log(indexres);
     } catch (e) {
       console.log(`error handling error`, e);
     }

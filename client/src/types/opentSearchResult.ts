@@ -1,7 +1,7 @@
 interface OpenSearchHit {
   _id: string;
   _source: {
-    filename: string;
+    objectKey: string;
     docType: string;
   };
   highlight?: {

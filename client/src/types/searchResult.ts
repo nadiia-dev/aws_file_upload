@@ -1,6 +1,6 @@
 export interface SearchResultItem {
   id: string;
-  filename: string;
+  objectKey: string;
   docType: string;
   highlight?: { content: string };
 }

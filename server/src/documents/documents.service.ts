@@ -17,13 +17,20 @@ export class DocumentsService {
   async getUrl({
     fileName,
     fileType,
+    userEmail,
   }: {
     fileName: string;
     fileType: string;
+    userEmail: string;
   }): Promise<{ presignedUrl: string; key: string }> {
     const timestamp = Date.now();
     const key = `uploads/${timestamp}_${fileName}`;
-    const url = await this.s3.uploadFile(config.S3_BUCKET!, key, fileType);
+    const url = await this.s3.uploadFile(
+      config.S3_BUCKET!,
+      key,
+      fileType,
+      userEmail,
+    );
     return { presignedUrl: url, key };
   }
 
@@ -78,8 +85,8 @@ export class DocumentsService {
     }
   }
 
-  async search(query: string) {
-    const res = await this.searchService.search('documents', query);
+  async search(query: string, userEmail: string) {
+    const res = await this.searchService.search('documents', query, userEmail);
     return res;
   }
 }

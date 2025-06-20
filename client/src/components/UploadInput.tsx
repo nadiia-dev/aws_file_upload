@@ -1,6 +1,7 @@
 import { CloudUpload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { generatePresignedUrl } from "../api";
+import { useUser } from "../context/userContext";
 
 const UploadInput = ({
   required,
@@ -17,6 +18,7 @@ const UploadInput = ({
     }>
   >;
 }) => {
+  const userEmail = useUser();
   const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
     useDropzone({
       maxFiles: 1,
@@ -29,7 +31,7 @@ const UploadInput = ({
         const name = incomingFiles[0].name;
         const type = incomingFiles[0].type;
 
-        const data = await generatePresignedUrl(name, type);
+        const data = await generatePresignedUrl(name, type, userEmail!);
         const url = `https://${import.meta.env.VITE_BUCKET}.s3.${
           import.meta.env.VITE_REGION
         }.amazonaws.com/${data?.key}`;

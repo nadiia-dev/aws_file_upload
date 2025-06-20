@@ -1,8 +1,10 @@
 import { Search } from "lucide-react";
 import { useSearchStore } from "../store/useSearchStore";
+import { useUser } from "../context/userContext";
 
 const SearchInput = () => {
   const { query, setDocuments, search } = useSearchStore();
+  const userEmail = useUser();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -11,7 +13,7 @@ const SearchInput = () => {
     if (value.trim() === "") {
       setDocuments(null);
     } else {
-      search(value);
+      search(userEmail!, value);
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

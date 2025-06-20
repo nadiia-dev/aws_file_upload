@@ -14,7 +14,9 @@ import { CreateDocumentDto } from './dto/document.dto';
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
   @Post('/generate-presigned-url')
-  getUrl(@Body() body: { fileName: string; fileType: string }) {
+  getUrl(
+    @Body() body: { fileName: string; fileType: string; userEmail: string },
+  ) {
     return this.documentsService.getUrl(body);
   }
 
@@ -34,7 +36,7 @@ export class DocumentsController {
   }
 
   @Get('/search')
-  searchDocuments(@Query() query: { searchQuery: string }) {
-    return this.documentsService.search(query.searchQuery);
+  searchDocuments(@Query() query: { searchQuery: string; userEmail: string }) {
+    return this.documentsService.search(query.searchQuery, query.userEmail);
   }
 }
