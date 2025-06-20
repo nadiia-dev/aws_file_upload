@@ -2,6 +2,7 @@ import { useState } from "react";
 import UploadInput from "../components/UploadInput";
 import { useUser } from "../context/userContext";
 import { uploadFile } from "../api";
+import { useFilesStore } from "../store/useFilesStore";
 
 const Upload = () => {
   const [fileData, setFileData] = useState<{
@@ -14,19 +15,25 @@ const Upload = () => {
     key: "",
   });
   const userEmail = useUser();
+  const { addFile } = useFilesStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const file = formData.get("my-file") as File;
-    await uploadFile(
+    const newFile = await uploadFile(
       fileData.presignedUrl,
       userEmail!,
       file,
       fileData.fileUrl,
       fileData.key
     );
+    if (newFile) {
+      addFile(newFile);
+    }
+    form.reset();
   };
 
   return (

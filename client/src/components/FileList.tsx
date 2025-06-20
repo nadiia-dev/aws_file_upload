@@ -1,9 +1,10 @@
 import { Trash2 } from "lucide-react";
 import type { FileItem } from "../types/file";
 import { formatDate } from "../utils/formatDate";
-import { deleteDocument } from "../api";
+import { useFilesStore } from "../store/useFilesStore";
 
 const FileList = ({ files }: { files: FileItem[] }) => {
+  const { deleteFile } = useFilesStore();
   return (
     <div className="space-y-4">
       <ul className="space-y-4">
@@ -23,7 +24,7 @@ const FileList = ({ files }: { files: FileItem[] }) => {
               </div>
               <button
                 type="button"
-                onClick={() => deleteDocument(file.id)}
+                onClick={() => deleteFile(file.id)}
                 className="text-red-500 cursor-pointer"
               >
                 <Trash2 />

@@ -12,25 +12,32 @@ export const uploadFile = async (
       method: "PUT",
       body: file,
     });
-    if (res.ok) {
-      await fetch(`${import.meta.env.VITE_API_URL}/documents/upload`, {
+    if (!res.ok) throw new Error("Upload to S3 failed");
+
+    const apiRes = await fetch(
+      `${import.meta.env.VITE_API_URL}/documents/upload`,
+      {
         method: "POST",
         body: JSON.stringify({
           userEmail,
-          filename: file?.name,
+          filename: file.name,
           s3Url: fileUrl,
           objectKey: key,
         }),
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      toast.success("File was uploaded successfully!");
-    }
+      }
+    );
+
+    if (!apiRes.ok) throw new Error("Failed to save metadata");
+
+    const newFile = await apiRes.json();
+    toast.success("File was uploaded successfully!");
+    return newFile;
   } catch (e) {
-    if (e instanceof Error) {
-      toast.error(e.message);
-    }
+    if (e instanceof Error) toast.error(e.message);
+    return null;
   }
 };
 

@@ -1,18 +1,23 @@
 import { Search } from "lucide-react";
+import { useSearchStore } from "../store/useSearchStore";
 
-const SearchInput = ({
-  query,
-  setQuery,
-}: {
-  query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const SearchInput = () => {
+  const { query, setDocuments, search } = useSearchStore();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const input = form.elements.namedItem("search") as HTMLInputElement;
     const value = input.value;
-    setQuery(value);
+    if (value.trim() === "") {
+      setDocuments(null);
+    } else {
+      search(value);
+    }
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.trim() === "") {
+      setDocuments(null);
+    }
   };
 
   return (
@@ -23,6 +28,7 @@ const SearchInput = ({
           name="search"
           placeholder="Search for files..."
           defaultValue={query}
+          onChange={(e) => handleChange(e)}
           className="flex-1 px-4 py-2 outline-none bg-transparent text-gray-800 placeholder-gray-400"
         />
         <button
