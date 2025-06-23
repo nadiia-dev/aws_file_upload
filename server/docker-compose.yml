@@ -20,7 +20,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/mydb
-    command: npm run start:dev
+    command: npm run start:prod
 
 volumes:
   postgres_data:
