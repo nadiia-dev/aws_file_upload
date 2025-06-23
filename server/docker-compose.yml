@@ -12,15 +12,5 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  backend:
-    build: .
-    ports:
-      - '3000:3000'
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql://user:password@db:5432/mydb
-    command: npm run start:prod
-
 volumes:
   postgres_data:
