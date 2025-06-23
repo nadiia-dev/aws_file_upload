@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/userContext";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { loginUser } = useUser();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-    localStorage.setItem("userEmail", email);
-    navigate("/upload");
+    loginUser(email);
+    navigate("/");
   };
 
   return (

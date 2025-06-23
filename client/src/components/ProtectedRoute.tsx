@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const email = useUser();
+  const { userEmail } = useUser();
 
-  if (!email) return <Navigate to="/register" />;
+  if (!userEmail) return <Navigate to="/register" />;
 
   return <>{children}</>;
 };

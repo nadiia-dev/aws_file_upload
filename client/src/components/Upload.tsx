@@ -1,5 +1,5 @@
 import { useState } from "react";
-import UploadInput from "../components/UploadInput";
+import UploadInput from "./UploadInput";
 import { useUser } from "../context/userContext";
 import { uploadFile } from "../api";
 import { useFilesStore } from "../store/useFilesStore";
@@ -14,7 +14,7 @@ const Upload = () => {
     fileUrl: "",
     key: "",
   });
-  const userEmail = useUser();
+  const { userEmail } = useUser();
   const { addFile } = useFilesStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

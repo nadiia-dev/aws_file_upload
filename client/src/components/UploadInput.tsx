@@ -18,7 +18,7 @@ const UploadInput = ({
     }>
   >;
 }) => {
-  const userEmail = useUser();
+  const { userEmail } = useUser();
   const { getRootProps, getInputProps, isDragActive, open, acceptedFiles } =
     useDropzone({
       maxFiles: 1,
