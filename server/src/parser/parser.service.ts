@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import * as mammoth from 'mammoth';
-import * as pdf from 'pdf-parse';
+import mammoth from 'mammoth';
+import pdf from 'pdf-parse';
 
 interface PdfParseResult {
   numpages: number;
