@@ -4,7 +4,7 @@ import { useUser } from "../context/userContext";
 
 const SearchInput = () => {
   const { query, setDocuments, search } = useSearchStore();
-  const userEmail = useUser();
+  const { userEmail } = useUser();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
